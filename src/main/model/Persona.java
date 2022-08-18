@@ -38,4 +38,8 @@ public class Persona {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
+	
+	public int compareTo(Persona persona2) {
+		return this.getNombre().compareTo(persona2.getNombre());
+	}
 }
