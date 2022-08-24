@@ -1,4 +1,6 @@
-package main.model;
+package main.model.tree;
+
+import main.model.dictionary.Persona;
 
 public class Nodo {
 
@@ -9,12 +11,15 @@ public class Nodo {
 	private boolean esHoja;
 	private int clavesUsadas;	
 	
-	public Nodo() {
+	public Nodo(int t) {
 		super();
 		// in progress
-		this.setClavesUsadas(0);
-		this.setEsHoja(true);
-		
+		this.numClaves = 0;
+		this.claves = new Persona[(2*t)-1];
+		this.numHijos = 0;
+		this.hijos = new Nodo[2*t];
+		this.esHoja = true;
+		this.clavesUsadas = 0;
 	}
 	
 	/*
@@ -64,8 +69,8 @@ public class Nodo {
 		this.clavesUsadas = this.clavesUsadas + cantidad;
 	}
 	
-	public void correrClave(int claveNueva, int claveAnterior) {
-		this.claves[claveNueva] = this.claves[claveAnterior];
+	public void correrClave(int posicionNueva, int posicionAnterior) {
+		this.claves[posicionNueva] = this.claves[posicionAnterior];
 	}
 	
 	public void setHijo(int posicion, Nodo hijoNuevo) {

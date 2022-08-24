@@ -1,4 +1,6 @@
-package main.model;
+package main.model.tree;
+
+import main.model.dictionary.Persona;
 
 public class Arbol {
 
@@ -30,7 +32,15 @@ public class Arbol {
 	/*
 	 * Métodos particulares
 	 */
-	public Nodo busqueda(Nodo nodo, Persona persona) {
+	public Persona busqueda(String nombrePersona) {
+		Persona personaBuscada = new Persona(nombrePersona, null, null, null);
+		ResultadoBusqueda resultado = busquedaEnNodo(this.raiz, personaBuscada);
+		
+		return resultado.getNodo().getClaves()[resultado.getIndice()];
+		
+	}
+	
+	private ResultadoBusqueda busquedaEnNodo(Nodo nodo, Persona persona) {
 		
 		int i = 0;
 		
@@ -39,17 +49,17 @@ public class Arbol {
 		}
 		
 		if(i < nodo.getNumClaves() && nodo.getClaves()[i].compareTo(persona) == 0) {
-			return nodo;
+			return new ResultadoBusqueda(nodo, i);
 		}
 		if(nodo.isEsHoja()) {
-			return null;
+			return new ResultadoBusqueda(nodo, null);
 		}
 		else {
-			return busqueda(nodo, persona);
+			return busquedaEnNodo(nodo, persona);
 		}
 	}
 	
-	public void insercionEnNodo(Nodo nodo, Persona persona) {
+	private void insercionEnNodo(Nodo nodo, Persona persona) {
 		
 		if (nodo.isEsHoja()) {
 			
@@ -86,11 +96,16 @@ public class Arbol {
 	
 	public void insertar(Persona persona) {
 		
+		if (this.raiz == null) { // el árbol está vacío
+			this.raiz = new Nodo(this.t);
+			this.raiz.setClave(0, persona);
+		}
+		
 		Nodo r = this.raiz;
 		
 		if (r.getClavesUsadas() == (2*(this.t-1))) {// 2*t -1 ( U - maximo de claves)
 			
-			Nodo s = new Nodo();
+			Nodo s = new Nodo(this.t);
 			
 			this.raiz = s;
 			s.setEsHoja(false);
@@ -100,14 +115,14 @@ public class Arbol {
 			insercionEnNodo(s, persona);
 		}
 		else {
-			Nodo s = new Nodo();
+			Nodo s = new Nodo(this.t);
 			insercionEnNodo(s, persona);
 		}
 	}
 	
-	public void dividir(Nodo npadre, int posicion, Nodo nhijo) {
+	private void dividir(Nodo npadre, int posicion, Nodo nhijo) {
 		
-		Nodo newNodo = new Nodo();
+		Nodo newNodo = new Nodo(this.t);
 		
 		newNodo.setEsHoja(nhijo.isEsHoja());
 		newNodo.setClavesUsadas(this.t-1); // L  - minimo de claves 
