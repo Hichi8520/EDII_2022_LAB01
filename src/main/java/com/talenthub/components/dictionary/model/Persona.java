@@ -1,10 +1,19 @@
-package main.model.dictionary;
+package main.java.com.talenthub.components.dictionary.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Persona implements Comparable{
 
-	private final String nombre;
-	private final String dpi;
+	@JsonProperty("name")
+	private String nombre;
+	
+	@JsonProperty("dpi")
+	private String dpi;
+	
+	@JsonProperty("datebirth")
 	private String fechaNac;
+	
+	@JsonProperty("address")
 	private String direccion;
 	
 	public Persona(String nombre, String dpi, String fechaNac, String direccion) {
@@ -13,6 +22,10 @@ public class Persona implements Comparable{
 		this.dpi = dpi;
 		this.fechaNac = fechaNac;
 		this.direccion = direccion;
+	}
+	
+	public Persona() {
+		
 	}
 
 	public String getNombre() {
@@ -62,6 +75,6 @@ public class Persona implements Comparable{
 	@Override
 	public String toString() {
 		return "{\"name\":\"" + nombre + "\", \"dpi\":\"" + dpi + "\", "
-				+ "\"dateBirth\":\"" + fechaNac + "\", \"address\":\"" + direccion + "\"}";
+				+ "\"datebirth\":\"" + fechaNac + "\", \"address\":\"" + direccion + "\"}";
 	}
 }

@@ -1,0 +1,94 @@
+package main.java.com.talenthub.components.files;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import main.java.com.talenthub.components.dictionary.model.Instruction;
+import main.java.com.talenthub.components.dictionary.model.Persona;
+
+public class FileManager {
+
+	private List<Instruction> instructions;
+	
+	public FileManager() {
+		super();
+		instructions = new ArrayList<>();
+	}
+
+	public List<Instruction> getInstructions() {
+		return instructions;
+	}
+
+	public void selectFile() {
+        String[] formats = new String[] { "csv" };
+        JFileChooser fChooser = new JFileChooser();
+        FileNameExtensionFilter fnFilter = new FileNameExtensionFilter("CSV", formats);
+        File csvFile;
+        fChooser.setFileFilter(fnFilter);
+        int dialog = fChooser.showOpenDialog(null);
+        if (dialog == JFileChooser.APPROVE_OPTION) {
+            csvFile = fChooser.getSelectedFile();
+            System.out.println(csvFile.getPath());
+            readFile(csvFile);
+            
+        } else if (dialog == JFileChooser.CANCEL_OPTION) {
+        	System.out.println("Alerta: Debe seleccionar un archivo");
+        }
+    }
+	
+	private void readFile(File file) {
+		BufferedReader reader;
+        StringBuilder sb = new StringBuilder();
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            while(line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                storeLine(line);
+                line = reader.readLine();
+            }
+            //text.setText(sb.toString());
+            System.out.println(instructions.size() + " instrucciones leídas");
+        } 
+        catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
+	}
+	
+	private void storeLine(String line) {
+		String[] info = line.split(";");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			Persona persona = objectMapper.readValue(info[1], Persona.class);
+			instructions.add(new Instruction(info[0], persona));
+			
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeFile() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Persona persona1 = new Persona("Luis", "30006565", "15/05/1999", "Villa Nueva");
+		
+	}
+}

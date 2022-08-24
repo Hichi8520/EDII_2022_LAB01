@@ -1,6 +1,8 @@
-package main.model.tree;
+package main.java.com.talenthub.components.tree;
 
-import main.model.dictionary.Persona;
+import main.java.com.talenthub.components.dictionary.model.Persona;
+import main.java.com.talenthub.components.tree.model.Nodo;
+import main.java.com.talenthub.components.tree.model.ResultadoBusqueda;
 
 public class Arbol {
 

@@ -1,4 +1,4 @@
-package main.model.dictionary;
+package main.java.com.talenthub.components.dictionary;
 
 public class Key<K1, K2> {
 

@@ -1,4 +1,4 @@
-package main.model.tree;
+package main.java.com.talenthub.components.tree.model;
 
 public class ResultadoBusqueda {
 

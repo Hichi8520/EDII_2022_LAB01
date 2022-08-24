@@ -1,6 +1,6 @@
-package main.model.tree;
+package main.java.com.talenthub.components.tree.model;
 
-import main.model.dictionary.Persona;
+import main.java.com.talenthub.components.dictionary.model.Persona;
 
 public class Nodo {
 

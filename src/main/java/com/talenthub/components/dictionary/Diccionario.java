@@ -1,10 +1,13 @@
-package main.model.dictionary;
+package main.java.com.talenthub.components.dictionary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import main.java.com.talenthub.components.dictionary.model.Instruction;
+import main.java.com.talenthub.components.dictionary.model.Persona;
 
 public class Diccionario {
 
@@ -29,14 +32,14 @@ public class Diccionario {
 		}
 	}
 	
-	public void eliminar(String nombre, String dpi) {
-		if (mapaExterno.containsKey(nombre)) {
+	public void eliminar(Persona persona) {
+		if (mapaExterno.containsKey(persona.getNombre())) {
 			
-			Map<String, Persona> mapaInterno = mapaExterno.get(nombre);
-			mapaInterno.remove(dpi);
+			Map<String, Persona> mapaInterno = mapaExterno.get(persona.getNombre());
+			mapaInterno.remove(persona.getDpi());
 			
 			if (mapaInterno.isEmpty()) {
-				mapaExterno.remove(nombre);
+				mapaExterno.remove(persona.getNombre());
 			}
 		}
 	}
@@ -64,5 +67,26 @@ public class Diccionario {
 		} else {
 			return null;
 		}
+	}
+	
+	public void insertarInstrucciones(List<Instruction> instructions) {
+		if (instructions != null || !instructions.isEmpty()) {
+			for	(Instruction instruction: instructions) {
+				
+				switch (instruction.getAction()) {
+					case "INSERT":
+						insertar(instruction.getPersona());
+						break;
+					case "DELETE":
+						eliminar(instruction.getPersona());
+						break;
+					case "PATCH":
+						actualizar(instruction.getPersona());
+						break;
+				}
+			}
+			System.out.println("Instrucciones ingresadas exitosamente");
+			
+		} else System.out.println("No hay instrucciones para procesar");
 	}
 }
