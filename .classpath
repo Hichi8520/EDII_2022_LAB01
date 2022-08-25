@@ -6,8 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/jar_files/jackson-annotations-2.13.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/jar_files/jackson-core-2.13.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/jar_files/jackson-databind-2.13.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/EDII_2022_LAB01/jar_files/jackson-annotations-2.13.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/EDII_2022_LAB01/jar_files/jackson-core-2.13.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Hector/Documents/Hichi U/Estructuras de Datos II/EDII_2022_LAB01/jar_files/jackson-databind-2.13.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
