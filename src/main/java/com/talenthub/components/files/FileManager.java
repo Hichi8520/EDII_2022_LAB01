@@ -1,10 +1,13 @@
 package main.java.com.talenthub.components.files;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,9 +89,17 @@ public class FileManager {
 		}
 	}
 	
-	public void writeFile() {
-		ObjectMapper objectMapper = new ObjectMapper();
-		Persona persona1 = new Persona("Luis", "30006565", "15/05/1999", "Villa Nueva");
-		
+	public void writeFile(String name, List<Persona> foundItems) throws IOException {
+		File fout = new File(String.format("outputs/%s.output", name));
+		FileOutputStream fos = new FileOutputStream(fout);
+	 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+	 
+		for (Persona persona: foundItems) {
+			bw.write(persona.toString());
+			bw.newLine();
+		}
+	 
+		bw.close();
 	}
 }

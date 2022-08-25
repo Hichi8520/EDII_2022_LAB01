@@ -33,6 +33,8 @@ public class TalentHub {
 			name = reader.readLine();
 			
 			List<Persona> found = dic.buscar(name);
+			
+			fm.writeFile(name, found);
 	        
 	        for(Persona persona: found) {
 	        	System.out.println(persona.toString());
