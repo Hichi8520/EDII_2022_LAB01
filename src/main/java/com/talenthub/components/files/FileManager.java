@@ -64,7 +64,7 @@ public class FileManager {
                 line = reader.readLine();
             }
             //text.setText(sb.toString());
-            System.out.println(instructions.size() + " instrucciones leídas");
+            System.out.println(instructions.size() + " instrucciones leidas");
         } 
         catch (FileNotFoundException e1) {
             e1.printStackTrace();

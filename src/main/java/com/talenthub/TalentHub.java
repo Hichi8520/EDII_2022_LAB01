@@ -21,27 +21,39 @@ public class TalentHub {
         Diccionario dic = new Diccionario();
         dic.insertarInstrucciones(fm.getInstructions());
         
-        
         // Search by user input
-        System.out.println("* Ingresa el nombre a buscar: ");
         BufferedReader reader = new BufferedReader(
-            new InputStreamReader(System.in));
- 
-        // Reading data using readLine
-        String name;
-		try {
-			name = reader.readLine();
-			
-			List<Persona> found = dic.buscar(name);
-			
-			fm.writeFile(name, found);
-	        
-	        for(Persona persona: found) {
-	        	System.out.println(persona.toString());
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+                new InputStreamReader(System.in));
+        String name = "";
+        
+        while (!name.equalsIgnoreCase("x")) {
+        	System.out.println();
+        	System.out.println("* Ingresa el nombre a buscar: (o ingresa X para salir)");
+        	 
+            // Reading data using readLine
+    		try {
+    			name = reader.readLine();
+    			
+    			if (!name.equalsIgnoreCase("x")) {
+    				
+    				List<Persona> found = dic.buscar(name);
+    				
+    				if (found == null || found.isEmpty()) {
+    					System.out.println(String.format("**El nombre %s no fue encontrado", name));
+    				} else {
+    					fm.writeFile(name, found);
+            	        
+            	        for(Persona persona: found) {
+            	        	System.out.println(persona.toString());
+            	        }
+    				}
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+        
+        System.out.println("Programa terminado...");
 	}
 
 }
