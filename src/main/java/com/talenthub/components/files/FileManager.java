@@ -34,7 +34,7 @@ public class FileManager {
 		return instructions;
 	}
 
-	public void selectFile() {
+	public boolean selectFile() {
         String[] formats = new String[] { "csv" };
         JFileChooser fChooser = new JFileChooser();
         FileNameExtensionFilter fnFilter = new FileNameExtensionFilter("CSV", formats);
@@ -43,12 +43,17 @@ public class FileManager {
         int dialog = fChooser.showOpenDialog(null);
         if (dialog == JFileChooser.APPROVE_OPTION) {
             csvFile = fChooser.getSelectedFile();
+            System.out.println();
             System.out.println(csvFile.getPath());
             readFile(csvFile);
+            return true;
             
         } else if (dialog == JFileChooser.CANCEL_OPTION) {
-        	System.out.println("Alerta: Debe seleccionar un archivo");
+        	System.out.println();
+        	System.out.println("** No se ha cargado ningun archivo **");
+        	return false;
         }
+        return false;
     }
 	
 	private void readFile(File file) {
@@ -64,6 +69,7 @@ public class FileManager {
                 line = reader.readLine();
             }
             //text.setText(sb.toString());
+            System.out.println();
             System.out.println(instructions.size() + " instrucciones leidas");
         } 
         catch (FileNotFoundException e1) {

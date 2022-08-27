@@ -85,8 +85,12 @@ public class Diccionario {
 						break;
 				}
 			}
+			System.out.println();
 			System.out.println("Instrucciones ingresadas exitosamente");
 			
-		} else System.out.println("No hay instrucciones para procesar");
+		} else {
+			System.out.println();
+			System.out.println("** No hay instrucciones para procesar **");
+		}
 	}
 }
