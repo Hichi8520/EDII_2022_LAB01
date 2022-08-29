@@ -162,9 +162,6 @@ public class TalentHub {
     	        
 				System.out.println();
 				System.out.println("Archivo de salida generado con exito");
-    	        for(Persona persona: found) {
-    	        	System.out.println(persona.toString());
-    	        }
 			}
 			
 		} catch (IOException e) {
