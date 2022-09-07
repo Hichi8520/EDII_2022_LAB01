@@ -8,6 +8,7 @@ import java.util.List;
 import main.java.com.talenthub.components.dictionary.Diccionario;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.files.FileManager;
+import main.java.com.talenthub.components.huffman.Huffman;
 
 public class TalentHub {
 	
@@ -17,13 +18,16 @@ public class TalentHub {
 
 	public static void main(String[] args) throws IOException {
 		
-		dic = new Diccionario();
+		Huffman huff = new Huffman();
+		huff.encode();
+		
+		/*dic = new Diccionario();
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		titleMessage();
 		cargarCsv();
-		mainMenu();
+		mainMenu();*/
 	}
 	
 	private static void mainMenu() {
