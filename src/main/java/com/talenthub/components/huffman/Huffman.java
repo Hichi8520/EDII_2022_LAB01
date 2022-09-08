@@ -1,11 +1,20 @@
 package main.java.com.talenthub.components.huffman;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Huffman {
 	
-	private 
+	private List<Character> charList;
+	private List<Integer> charFreq;
+	
+	public Huffman() {
+		this.charList = new ArrayList<Character>();
+		this.charFreq = new ArrayList<Integer>();
+	}
 	
 	private void printCode(HuffmanNode root, String s) {
 		if (root.getLeft() == null && root.getRight() == null && Character.isLetter(root.getC())) { // leaf node
@@ -18,18 +27,19 @@ public class Huffman {
 	    printCode(root.getRight(), s + "1");
 	}
 	
-	public void encode() {
-		int n = 8;
-	    char[] charArray = { 'd', 'a', 'b', 'c', 'e', 'h', 'f', 'g' };
-	    int[] charfreq = { 9, 4, 4, 7, 1, 1, 1, 5 };
+	public void encode(String textToEncode) {
+	    //char[] charArray = { 'd', 'a', 'b', 'c', 'e', 'h', 'f', 'g' };
+	    //int[] charfreq = { 9, 4, 4, 7, 1, 1, 1, 5 };
+		getFrecuencies(textToEncode);
+		int n = charList.size();
 	    
 	    PriorityQueue<HuffmanNode> q = new PriorityQueue<HuffmanNode>(n, new HuffmanComparator());
 	    
 	    for (int i = 0; i < n; i++) {
 	        HuffmanNode huffNode = new HuffmanNode();
 
-	        huffNode.setC(charArray[i]);
-	        huffNode.setItem(charfreq[i]);
+	        huffNode.setC(charList.get(i));
+	        huffNode.setItem(charFreq.get(i));
 
 	        huffNode.setLeft(null);
 	        huffNode.setRight(null);
@@ -62,9 +72,9 @@ public class Huffman {
 	      printCode(root, "");
 	}
 	
-	private void getFrecuencies() {
+	@SuppressWarnings("removal")
+	private void getFrecuencies(String s) {
 		HashMap<Character, Integer> map = new HashMap<Character, Integer>();
-		String s = "aasjjikkk";
 		for (int i = 0; i < s.length(); i++) {
 		    char c = s.charAt(i);
 		    Integer val = map.get(c);
@@ -75,5 +85,10 @@ public class Huffman {
 		       map.put(c, 1);
 		   }
 		}
+		
+		for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+			charList.add(entry.getKey());
+			charFreq.add(entry.getValue());
+	    }
 	}
 }

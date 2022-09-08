@@ -19,7 +19,7 @@ public class TalentHub {
 	public static void main(String[] args) throws IOException {
 		
 		Huffman huff = new Huffman();
-		huff.encode();
+		huff.encode("aabbbbcdde");
 		
 		/*dic = new Diccionario();
 		fm = new FileManager();
