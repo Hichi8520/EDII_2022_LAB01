@@ -1,6 +1,15 @@
 package main.java.com.talenthub.components.dictionary.model;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import main.java.com.talenthub.components.huffman.Huffman;
 
 public class Persona implements Comparable{
 
@@ -16,16 +25,23 @@ public class Persona implements Comparable{
 	@JsonProperty("address")
 	private String direccion;
 	
-	public Persona(String nombre, String dpi, String fechaNac, String direccion) {
+	@JsonProperty("companies")
+	private List<String> empresas;
+	
+	private Map<String, String> mapaEmpresaDpi;
+	
+	public Persona(String nombre, String dpi, String fechaNac, String direccion, List<String> empresas) {
 		super();
 		this.nombre = nombre;
 		this.dpi = dpi;
 		this.fechaNac = fechaNac;
 		this.direccion = direccion;
+		this.empresas = empresas;
+		this.mapaEmpresaDpi = new HashMap<String, String>();
 	}
 	
 	public Persona() {
-		
+		this.mapaEmpresaDpi = new HashMap<String, String>();
 	}
 
 	public String getNombre() {
@@ -51,10 +67,22 @@ public class Persona implements Comparable{
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	
-	/*public int compareTo(Persona persona2) {
-		return this.getNombre().compareTo(persona2.getNombre());
-	}*/
+
+	public List<String> getEmpresas() {
+		return empresas;
+	}
+
+	public void setEmpresas(List<String> empresas) {
+		this.empresas = empresas;
+	}
+
+	public Map<String, String> getMapaEmpresaDpi() {
+		return mapaEmpresaDpi;
+	}
+
+	public void setMapaEmpresaDpi(Map<String, String> mapaEmpresaDpi) {
+		this.mapaEmpresaDpi = mapaEmpresaDpi;
+	}
 
 	@Override
 	public int compareTo(Object o) {
@@ -74,7 +102,26 @@ public class Persona implements Comparable{
 	
 	@Override
 	public String toString() {
-		return "{\"name\":\"" + nombre + "\", \"dpi\":\"" + dpi + "\", "
-				+ "\"datebirth\":\"" + fechaNac + "\", \"address\":\"" + direccion + "\"}";
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = "";
+		try {
+			json = ow.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		
+		/*return "{\"name\":\"" + nombre + "\", \"dpi\":\"" + dpi + "\", "
+				+ "\"datebirth\":\"" + fechaNac + "\", \"address\":\"" + direccion + "\"}";*/
+	}
+	
+	public void encodeCompanies() {
+		Huffman huff = new Huffman();
+		if(this.empresas != null && !this.empresas.isEmpty()) {
+			for(String empresa: this.empresas) {
+				mapaEmpresaDpi.put(empresa, huff.encode(empresa + this.dpi));
+			}
+		}
 	}
 }

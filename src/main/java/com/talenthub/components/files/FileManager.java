@@ -86,6 +86,7 @@ public class FileManager {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			Persona persona = objectMapper.readValue(info[1], Persona.class);
+			persona.encodeCompanies();
 			instructions.add(new Instruction(info[0], persona));
 			
 		} catch (JsonMappingException e) {
@@ -105,6 +106,18 @@ public class FileManager {
 			bw.write(persona.toString());
 			bw.newLine();
 		}
+	 
+		bw.close();
+	}
+	
+	public void writeFile(String dpi, Persona foundItem) throws IOException {
+		File fout = new File(String.format("outputs/%s.output", foundItem.getNombre()));
+		FileOutputStream fos = new FileOutputStream(fout);
+	 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+	 
+		bw.write(foundItem.toString());
+		bw.newLine();
 	 
 		bw.close();
 	}

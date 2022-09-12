@@ -35,7 +35,7 @@ public class Arbol {
 	 * Métodos particulares
 	 */
 	public Persona busqueda(String nombrePersona) {
-		Persona personaBuscada = new Persona(nombrePersona, null, null, null);
+		Persona personaBuscada = new Persona(nombrePersona, null, null, null, null);
 		ResultadoBusqueda resultado = busquedaEnNodo(this.raiz, personaBuscada);
 		
 		return resultado.getNodo().getClaves()[resultado.getIndice()];

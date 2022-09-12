@@ -23,13 +23,21 @@ public class TalentHub {
 		System.out.println("Resultado del cifrado: " + encodedText);
 		huff.decode(encodedText);
 		
-		/*dic = new Diccionario();
+		dic = new Diccionario();
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		titleMessage();
 		cargarCsv();
-		mainMenu();*/
+		mainMenu();
+	}
+	
+	private static void cargarCsv() {
+		// Select .csv file
+        if (fm.selectFile()) {
+        	// Pass the instructions to the dictionary
+            dic.insertarInstrucciones(fm.getInstructions());
+        }
 	}
 	
 	private static void mainMenu() {
@@ -76,14 +84,6 @@ public class TalentHub {
         }
 	}
 	
-	private static void cargarCsv() {
-		// Select .csv file
-        if (fm.selectFile()) {
-        	// Pass the instructions to the dictionary
-            dic.insertarInstrucciones(fm.getInstructions());
-        }
-	}
-	
 	private static void insertarPersona() {
 		try {
 			System.out.println();
@@ -100,7 +100,7 @@ public class TalentHub {
 			System.out.print("Direccion: ");
 			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion);
+			persona = new Persona(nombre, dpi, fechaNac, direccion, null);
 			dic.insertar(persona);
 			
 		} catch (IOException e) {
@@ -120,7 +120,7 @@ public class TalentHub {
 			System.out.print("DPI: ");
 			dpi = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, "", "");
+			persona = new Persona(nombre, dpi, "", "", null);
 			dic.eliminar(persona);
 			
 		} catch (IOException e) {
@@ -144,7 +144,7 @@ public class TalentHub {
 			System.out.print("Direccion: ");
 			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion);
+			persona = new Persona(nombre, dpi, fechaNac, direccion, null);
 			dic.actualizar(persona);
 			
 		} catch (IOException e) {
@@ -155,19 +155,20 @@ public class TalentHub {
 	private static void buscarPersona() {
 		try {
 			System.out.println();
-			System.out.print("Ingresa el nombre a buscar: ");
-			String nombre = reader.readLine();
+			System.out.print("Ingresa el dpi a buscar: ");
+			String dpi = reader.readLine();
 			
-			List<Persona> found = dic.buscar(nombre);
+			Persona found = dic.buscar(dpi);
 			
-			if (found == null || found.isEmpty()) {
+			if (found == null) {
 				System.out.println();
-				System.out.println(String.format("** El nombre %s no fue encontrado **", nombre));
+				System.out.println(String.format("** El dpi %s no fue encontrado **", dpi));
 			} else {
-				fm.writeFile(nombre, found);
+				fm.writeFile(dpi, found);
     	        
 				System.out.println();
 				System.out.println("Archivo de salida generado con exito");
+				System.out.println(found.toString());
 			}
 			
 		} catch (IOException e) {
