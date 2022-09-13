@@ -23,15 +23,60 @@ import main.java.com.talenthub.components.dictionary.model.Persona;
 
 public class FileManager {
 
+	private List<String> companies;
 	private List<Instruction> instructions;
 	
 	public FileManager() {
 		super();
+		companies = new ArrayList<>();
 		instructions = new ArrayList<>();
+	}
+	
+	public List<String> getCompanies() {
+		return companies;
 	}
 
 	public List<Instruction> getInstructions() {
 		return instructions;
+	}
+	
+	public boolean loadJsonEmpresas() {
+		BufferedReader reader;
+        StringBuilder sb = new StringBuilder();
+        try {
+        	File jsonFile = new File("files/companies.json");
+            reader = new BufferedReader(new FileReader(jsonFile));
+            String line = reader.readLine();
+            while(line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                storeCompaniesLine(line);
+                line = reader.readLine();
+            }
+            //text.setText(sb.toString());
+            System.out.println();
+            System.out.println(companies.size() + " empresas leidas");
+        } 
+        catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if(companies.isEmpty()) return false;
+        else return true;
+	}
+	
+	private void storeCompaniesLine(String line) {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			companies = objectMapper.readValue(line, List.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean selectFile() {

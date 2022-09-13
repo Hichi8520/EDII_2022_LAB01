@@ -48,13 +48,15 @@ public class Huffman {
 	    return encodedText;
 	}
 	
-	public void decode(String encodedText) {
+	public String decode(String encodedText) {
 		init();
 		getFrecuenciesFromTable(encodedText); // Set charList & charFreq
 	    
 	    nodesProcess(false);
 	      
 	    bytesToText();
+	    
+	    return decodedText;
 	}
 	
 	@SuppressWarnings("removal")
@@ -126,15 +128,15 @@ public class Huffman {
 
 	        q.add(f);
 	    }
-	    System.out.println(" Char | Huffman code ");
-	    System.out.println("--------------------");
+	    //System.out.println(" Char | Huffman code ");
+	    //System.out.println("--------------------");
 	    getPrefixCode(root, "", isEncoding);
 	}
 	
 	private void getPrefixCode(HuffmanNode root, String s, boolean isEncoding) {
 		if (root.getLeft() == null && root.getRight() == null) { // leaf node
 			
-			System.out.println(root.getC() + "   |  " + s);
+			//System.out.println(root.getC() + "   |  " + s);
 			if(isEncoding)
 				charPrefixMap.put(root.getC(), s);
 			else
@@ -153,7 +155,7 @@ public class Huffman {
 		for(int i=0; i < textToEncode.length(); i++) {
 			bitString += charPrefixMap.get(textToEncode.charAt(i));
 		}
-		System.out.println("Cadena como bits: " + bitString);
+		//System.out.println("Cadena como bits: " + bitString);
 		
 		
 		// Read 7 by 7 bits to obtain the bytes and form each character
@@ -186,9 +188,8 @@ public class Huffman {
 			encodedText = String.valueOf(extraZeros)
 					.concat(delimiter)
 					.concat(new String(byteArr, "UTF-8"));
-			//this.encodedText = new String(byteArr, "ISO-8859-1");
-			System.out.println("EncodedText: " + encodedText);
-			System.out.println("EncodedTextLength: " + encodedText.length());
+			//System.out.println("EncodedText: " + encodedText);
+			//System.out.println("EncodedTextLength: " + encodedText.length());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -209,7 +210,7 @@ public class Huffman {
 		else
 			bitString = bitString + s1;
 		
-		System.out.println("Cadena como bits: " + bitString);
+		//System.out.println("Cadena como bits: " + bitString);
 		
 		
 		String readBits = "";
@@ -222,7 +223,7 @@ public class Huffman {
 			}
 			
 		}
-		System.out.println("DecodedText: " + decodedText);
+		//System.out.println("DecodedText: " + decodedText);
 	}
 	
 	private void appendTable() {
