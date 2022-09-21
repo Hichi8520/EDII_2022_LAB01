@@ -3,10 +3,13 @@ package main.java.com.talenthub;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
+
 import main.java.com.talenthub.components.dictionary.Diccionario;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.files.FileManager;
 import main.java.com.talenthub.components.huffman.Huffman;
+import main.java.com.talenthub.components.lzw.LZW;
 
 public class TalentHub {
 	
@@ -20,10 +23,28 @@ public class TalentHub {
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		titleMessage();
-		cargarJsonEmpresas();
-		cargarCsv();
-		mainMenu();
+		LZW lzw = new LZW();
+		String textToCompress = "Praesentium praesentium quaerat error omnis ducimus eligendi maxime. Voluptates explicabo ab suscipit quam vero eum aspernatur ab. Molestiae omnis eos ut perspiciatis voluptas veritatis illo. A dolore consequatur non. Quis totam necessitatibus molestias ea.\r\n"
+				+ "In molestiae est ipsa fugit perspiciatis qui. Minus quam reiciendis voluptate qui aspernatur molestiae nihil ratione vero. Autem eum omnis recusandae aut recusandae. Recusandae dolorem inventore eum culpa. Natus rerum laborum autem minus.\r\n"
+				+ "Vitae suscipit animi quis totam molestiae qui. Ut amet delectus quia et maxime dolor voluptas. Aut similique nostrum quasi consectetur sint doloribus non aliquid. Et cupiditate ab quasi porro.\r\n"
+				+ "Non qui repellendus. In accusamus quia possimus doloribus. Repellendus quae aperiam dicta doloremque. Sequi autem et eveniet sit. Doloribus dolorem corporis rerum aut accusantium ab repellat at.\r\n"
+				+ "Eius quasi ipsam animi repudiandae sunt repellendus saepe non harum. Debitis molestiae est sint omnis tempore doloremque vel. Et culpa enim. Sit ducimus voluptas.";
+		System.out.println(textToCompress);
+		List<Integer> compressed = lzw.compress(textToCompress);
+		System.out.println();
+        System.out.println(compressed);
+        String decompressed = lzw.decompress(compressed);
+        System.out.println();
+        System.out.println(decompressed);
+        
+        System.out.println();
+        System.out.println(textToCompress.length());
+        System.out.println(compressed.size());
+		
+		//titleMessage();
+		//cargarJsonEmpresas();
+		//cargarCsv();
+		//mainMenu();
 	}
 	
 	private static void cargarJsonEmpresas() {
