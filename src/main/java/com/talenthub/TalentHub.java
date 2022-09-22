@@ -23,7 +23,7 @@ public class TalentHub {
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		LZW lzw = new LZW();
+		/*LZW lzw = new LZW();
 		String textToCompress = "Praesentium praesentium quaerat error omnis ducimus eligendi maxime. Voluptates explicabo ab suscipit quam vero eum aspernatur ab. Molestiae omnis eos ut perspiciatis voluptas veritatis illo. A dolore consequatur non. Quis totam necessitatibus molestias ea.\r\n"
 				+ "In molestiae est ipsa fugit perspiciatis qui. Minus quam reiciendis voluptate qui aspernatur molestiae nihil ratione vero. Autem eum omnis recusandae aut recusandae. Recusandae dolorem inventore eum culpa. Natus rerum laborum autem minus.\r\n"
 				+ "Vitae suscipit animi quis totam molestiae qui. Ut amet delectus quia et maxime dolor voluptas. Aut similique nostrum quasi consectetur sint doloribus non aliquid. Et cupiditate ab quasi porro.\r\n"
@@ -40,6 +40,7 @@ public class TalentHub {
         System.out.println();
         System.out.println(textToCompress.length());
         System.out.println(compressed.size());
+        */
 		
 		//titleMessage();
 		//cargarJsonEmpresas();
@@ -212,6 +213,7 @@ public class TalentHub {
     	        
 				System.out.println();
 				System.out.println("Archivo de salida generado con exito");
+				System.out.println();
 				System.out.println(found.toString());
 				
 				switch(encodeOption) {
@@ -219,7 +221,12 @@ public class TalentHub {
 						encodeSelectedCompany(companyIndex, found);
 						break;
 					case "2": // Decoding
-						decodeSelectedCompany(companyIndex, found);
+						String decodedDpi = decodeSelectedCompany(companyIndex, found);
+						if(decodedDpi != null) {
+							// TODO comprimir todas las cartas del usuario encontrado
+							// y mostrar un menú para ver que carta quiere 
+							// descomprimir el usuario
+						}
 						break;
 				}
 			}
@@ -247,7 +254,7 @@ public class TalentHub {
 		}
 	}
 	
-	private static void decodeSelectedCompany(int companyIndex, Persona foundPerson) {
+	private static String decodeSelectedCompany(int companyIndex, Persona foundPerson) {
 		Huffman huff = new Huffman();
 		String company = fm.getCompanies().get(companyIndex);
 		String dpiToDecode = foundPerson.getMapaEmpresaDpi()
@@ -262,9 +269,11 @@ public class TalentHub {
 			
 			System.out.println();
 			System.out.println("DPI original: " + decodedDpi);
+			return decodedDpi;
 		} else {
 			System.out.println();
 			System.out.println("** Esta persona no se encuentra asociada a la empresa seleccionada **");
+			return null;
 		}
 	}
 
