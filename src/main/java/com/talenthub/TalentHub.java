@@ -32,7 +32,7 @@ public class TalentHub {
 		System.out.println(textToCompress);
 		List<Integer> compressed = lzw.compress(textToCompress);
 		System.out.println();
-        System.out.println(compressed);
+        System.out.println(compressed.toString());
         String decompressed = lzw.decompress(compressed);
         System.out.println();
         System.out.println(decompressed);
@@ -42,10 +42,10 @@ public class TalentHub {
         System.out.println(compressed.size());
         */
 		
-		//titleMessage();
-		//cargarJsonEmpresas();
-		//cargarCsv();
-		//mainMenu();
+		titleMessage();
+		cargarJsonEmpresas();
+		cargarCsv();
+		mainMenu();
 	}
 	
 	private static void cargarJsonEmpresas() {
@@ -226,6 +226,8 @@ public class TalentHub {
 							// TODO comprimir todas las cartas del usuario encontrado
 							// y mostrar un menú para ver que carta quiere 
 							// descomprimir el usuario
+							fm.compressFilesByDpi(decodedDpi);
+							descomprimirCarta(decodedDpi, fm.getCompressedCount());
 						}
 						break;
 				}
@@ -233,6 +235,34 @@ public class TalentHub {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private static void descomprimirCarta(String dpi, Integer cantCartas) {
+		if(cantCartas > 0) {
+			try {
+				System.out.println();
+				System.out.println("Cartas disponibles para este usuario: " + cantCartas);
+				System.out.println();
+				System.out.print("Ingresa la carta que quieres descomprimir: ");
+				String numCarta = reader.readLine();
+				
+				if(isNumeric(numCarta) && Integer.valueOf(numCarta) > 0 && Integer.valueOf(numCarta) <= cantCartas) {
+					
+					fm.decompressFileByDpi(dpi, Integer.valueOf(numCarta));
+					
+				} else {
+					System.out.println();
+					System.out.println("** Opcion invalida");
+				}
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("** El usuario no tiene cartas disponibles");
 		}
 	}
 	
