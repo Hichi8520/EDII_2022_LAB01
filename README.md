@@ -1,2 +1,2 @@
-# LABORATORIO NO. 3
-Cartas de recomendaciones de Talent Hub
+# LABORATORIO NO. 4
+Registros de Contratación de Talent Hub
