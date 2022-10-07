@@ -1,5 +1,8 @@
 package main.java.com.talenthub.components.trans;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Trans {
 
 	private int[] p;
@@ -25,9 +28,23 @@ public class Trans {
 	
 	private void setPatternFromKey(String key) {
 		
-		int[] p = {8, 5, 2, 9, 0, 7, 4, 1, 3, 6};
+		Map<Character, Integer> values = new HashMap<Character, Integer>();
+		int index = 0;
+		for(char c : key.toCharArray()) {
+			if(!values.containsKey(c)) {
+				values.put(c, index);
+				index++;
+			}
+		}
 		
-		setPattern(p);
+		index = 0;
+		int[] patternItems = new int[values.size()];
+		for (Map.Entry<Character, Integer> entry : values.entrySet()) {
+			patternItems[entry.getValue()] = index;
+			index++;
+	    }
+		
+		setPattern(patternItems);
 	}
 	
 	private void setPattern(int[] pattern){		

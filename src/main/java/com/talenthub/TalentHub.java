@@ -23,58 +23,6 @@ public class TalentHub {
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		/*
-		String message = "01/06/22, 2:11 AM - +502 5767 9807: Et repellendus sint vero aut.\r\n"
-				+ "01/08/22, 11:22 AM - +502 5767 9807: Quod fugiat vel quaerat qui incidunt incidunt odit.\r\n"
-				+ "01/16/22, 9:23 PM - +502 5767 9807: Repudiandae doloremque aut iure eaque.\r\n"
-				+ "01/22/22, 1:09 AM - +502 5617 7422: Et explicabo inventore quo error tempora quia aut sint.\r\n"
-				+ "02/07/22, 5:58 PM - +502 5767 9807: Necessitatibus eaque nulla qui.\r\n"
-				+ "02/08/22, 3:25 AM - +502 5617 7422: Dolorum reiciendis inventore voluptate necessitatibus qui ut corrupti.\r\n"
-				+ "02/25/22, 6:28 AM - +502 5617 7422: Architecto adipisci qui quos ratione asperiores vel.\r\n"
-				+ "03/05/22, 10:51 AM - +502 5617 7422: Labore eligendi nemo ipsa.\r\n"
-				+ "03/23/22, 11:42 AM - +502 5617 7422: Maiores consequatur enim et.\r\n"
-				+ "03/24/22, 8:22 AM - +502 5617 7422: Numquam voluptates voluptatem.\r\n"
-				+ "03/24/22, 7:39 PM - +502 5617 7422: Inventore beatae doloremque qui et perspiciatis.\r\n"
-				+ "03/26/22, 4:53 AM - +502 5617 7422: Qui voluptates eius ad architecto quam aut.\r\n"
-				+ "04/02/22, 10:08 AM - +502 5767 9807: Quo illum sunt.\r\n"
-				+ "04/19/22, 1:38 AM - +502 5767 9807: Nobis harum aliquid voluptas assumenda perferendis fugit.\r\n"
-				+ "05/11/22, 11:52 AM - +502 5767 9807: Vel tenetur voluptatum.\r\n"
-				+ "05/14/22, 11:38 PM - +502 5767 9807: Aut distinctio quibusdam consequatur tempora.\r\n"
-				+ "05/18/22, 6:19 PM - +502 5767 9807: Ea quis ipsum ad ut.\r\n"
-				+ "05/29/22, 7:14 PM - +502 5617 7422: Quibusdam et nihil a sed consectetur doloremque.\r\n"
-				+ "06/12/22, 9:38 PM - +502 5617 7422: Pariatur aperiam maxime quidem praesentium enim.\r\n"
-				+ "06/20/22, 3:22 AM - +502 5617 7422: Molestiae ea tempore.\r\n"
-				+ "06/24/22, 11:07 PM - +502 5617 7422: Inventore ullam nesciunt sit.\r\n"
-				+ "07/08/22, 9:22 PM - +502 5767 9807: Eos perspiciatis rerum.\r\n"
-				+ "08/22/22, 3:04 PM - +502 5617 7422: Cupiditate nesciunt et omnis dolorem enim vel cum.\r\n"
-				+ "08/26/22, 9:57 AM - +502 5617 7422: Reprehenderit quo fugiat quam.\r\n"
-				+ "08/30/22, 10:47 PM - +502 5617 7422: Omnis velit blanditiis reprehenderit itaque.\r\n"
-				+ "09/09/22, 11:04 PM - +502 5767 9807: Perspiciatis rerum nam dolores.\r\n"
-				+ "09/13/22, 8:32 AM - +502 5617 7422: Provident deserunt aliquam nesciunt officia qui provident rerum minus facilis.\r\n"
-				+ "09/15/22, 12:03 PM - +502 5617 7422: Aspernatur ut suscipit.\r\n"
-				+ "10/18/22, 7:17 AM - +502 5767 9807: Mollitia molestias ea quo blanditiis sunt placeat.\r\n"
-				+ "10/23/22, 10:53 PM - +502 5767 9807: Nihil distinctio consectetur.\r\n"
-				+ "10/29/22, 8:44 PM - +502 5617 7422: Magnam natus veniam voluptatibus doloremque et unde sint.\r\n"
-				+ "11/10/22, 7:59 AM - +502 5617 7422: Mollitia sit ipsam dolores inventore voluptate.\r\n"
-				+ "11/13/22, 5:50 AM - +502 5617 7422: Facilis quis suscipit.\r\n"
-				+ "11/17/22, 8:21 PM - +502 5617 7422: Ab eum nesciunt quis omnis totam et autem.\r\n"
-				+ "11/23/22, 2:46 AM - +502 5767 9807: Harum esse ut asperiores quis quaerat repudiandae.\r\n"
-				+ "11/27/22, 2:08 AM - +502 5617 7422: Similique incidunt optio repellendus voluptate odit.\r\n"
-				+ "12/09/22, 12:12 AM - +502 5767 9807: Corrupti autem rem illum maiores repellat velit culpa.\r\n"
-				+ "12/10/22, 4:48 AM - +502 5767 9807: Rerum illo quam qui.";
-		
-		Trans trans = new Trans();
-		
-		String ciphered = trans.cipher("8895433843822", message);
-		
-		System.out.println(ciphered);
-		
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println(trans.decipher("8895433843822", ciphered));
-		*/
-		
 		titleMessage();
 		cargarJsonEmpresas();
 		cargarCsv();
