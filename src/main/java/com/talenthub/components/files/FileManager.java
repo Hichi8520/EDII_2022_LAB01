@@ -315,8 +315,8 @@ public class FileManager {
 				file = new File(String.format("files/inputs/CONV-%s-%d.txt", dpi, index));
 				if(file.exists()) {
 					didCipher = true;
-					String textToCipher = readConvFile(file);
-					String cipheredText = trans.cipher(dpi, textToCipher);
+					String textToCipher = readConvFile(file, true);
+					String cipheredText = trans.cipher(dpi, textToCipher.replace(System.lineSeparator(), "^"));
 					writeCipheredFile(dpi, cipheredText, index);
 				}
 			} while (file.exists());
@@ -332,7 +332,7 @@ public class FileManager {
         else cipheredCount = 0;
 	}
 	
-	private String readConvFile(File file) {
+	private String readConvFile(File file, boolean isEncrypting) {
 		BufferedReader reader;
         StringBuilder sb = new StringBuilder();
         try {
@@ -340,7 +340,8 @@ public class FileManager {
             String line = reader.readLine();
             while(line != null) {
                 sb.append(line);
-                sb.append(System.lineSeparator());
+                if(isEncrypting)
+                	sb.append(System.lineSeparator());
                 line = reader.readLine();
             }
             reader.close();
@@ -362,7 +363,7 @@ public class FileManager {
 	 
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 	 
-		bw.write(cipheredText.toString());
+		bw.write(cipheredText);
 		//bw.newLine();
 	 
 		bw.close();
@@ -386,7 +387,7 @@ public class FileManager {
 		
 		try {
 			file = new File(String.format("crypted/%s/crypted-CONV-%s-%d.txt", dpi, dpi, convIndex));
-			String cipheredText = readConvFile(file);
+			String cipheredText = readConvFile(file, false);
 			
 			String originalText = trans.decipher(dpi, cipheredText);
 			writeDecipheredFile(dpi, originalText, convIndex);

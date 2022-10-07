@@ -4,6 +4,8 @@ public class Trans {
 
 	private int[] p;
 	
+	// char -> \r = 10, \n = 10
+	
 	public Trans() {
 		
 	}
@@ -17,17 +19,18 @@ public class Trans {
 	public String decipher(String key, String textToDecrypt) {
 		
 		setPatternFromKey(key);
-		return new String(decipherProcess(textToDecrypt.getBytes()));
+		String result = new String(decipherProcess(textToDecrypt.getBytes()));
+		return formatDecipher(result);
 	}
 	
 	private void setPatternFromKey(String key) {
 		
-		int[] p = {5, 2, 0, 4, 1, 3};
+		int[] p = {8, 5, 2, 9, 0, 7, 4, 1, 3, 6};
 		
-		setKey(p);
+		setPattern(p);
 	}
 	
-	private void setKey(int[] pattern){		
+	private void setPattern(int[] pattern){		
 		int[] a = new int[pattern.length];
 		
 		int i = 0;
@@ -77,5 +80,9 @@ public class Trans {
 			for (int j = p[i]; j < l; j += n) m[j] = c[k++];
 		
 		return m;
+	}
+	
+	private String formatDecipher(String decipheredText) {
+		return decipheredText.replace("^", System.lineSeparator());
 	}
 }
