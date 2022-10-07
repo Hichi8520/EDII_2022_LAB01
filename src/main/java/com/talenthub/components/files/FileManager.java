@@ -21,20 +21,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import main.java.com.talenthub.components.dictionary.model.Instruction;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.lzw.LZW;
+import main.java.com.talenthub.components.trans.Trans;
 
 public class FileManager {
 
 	private List<String> companies;
 	private List<Instruction> instructions;
 	private LZW lzw;
+	private Trans trans;
 	private Integer compressedCount;
+	private Integer cipheredCount;
 	
 	public FileManager() {
 		super();
 		companies = new ArrayList<>();
 		instructions = new ArrayList<>();
 		lzw = new LZW();
+		trans = new Trans();
 		compressedCount = 0;
+		cipheredCount = 0;
 	}
 	
 	public List<String> getCompanies() {
@@ -47,6 +52,10 @@ public class FileManager {
 	
 	public Integer getCompressedCount() {
 		return compressedCount;
+	}
+	
+	public Integer getCipheredCount() {
+		return cipheredCount;
 	}
 	
 	/*
@@ -286,6 +295,104 @@ public class FileManager {
 			
 			System.out.println();
             System.out.println("Carta descomprimida exitosamente");
+		} catch (IOException e) {
+			// Handle file write
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Cipher / decipher
+	 */
+	public void cipherFilesByDpi(String dpi) {
+		File file;
+		int index = 0;
+		boolean didCipher = false;
+		
+		try {
+			do {
+				index++;
+				file = new File(String.format("files/inputs/CONV-%s-%d.txt", dpi, index));
+				if(file.exists()) {
+					didCipher = true;
+					String textToCipher = readConvFile(file);
+					String cipheredText = trans.cipher(dpi, textToCipher);
+					writeCipheredFile(dpi, cipheredText, index);
+				}
+			} while (file.exists());
+			
+			System.out.println();
+            System.out.println(index - 1 + " conversaciones cifradas");
+		} catch (IOException e) {
+			// Handle file write
+			e.printStackTrace();
+		}
+		
+		if(didCipher) cipheredCount = index - 1;
+        else cipheredCount = 0;
+	}
+	
+	private String readConvFile(File file) {
+		BufferedReader reader;
+        StringBuilder sb = new StringBuilder();
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            while(line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            reader.close();
+            return sb.toString();
+        } 
+        catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+	}
+	
+	public void writeCipheredFile(String dpi, String cipheredText, Integer index) throws IOException {
+		new File(String.format("crypted/%s", dpi)).mkdirs();
+		File fout = new File(String.format("crypted/%s/crypted-CONV-%s-%d.txt", dpi, dpi, index));
+		FileOutputStream fos = new FileOutputStream(fout);
+	 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+	 
+		bw.write(cipheredText.toString());
+		//bw.newLine();
+	 
+		bw.close();
+	}
+	
+	public void writeDecipheredFile(String dpi, String decipheredText, Integer index) throws IOException {
+		new File(String.format("decrypted/%s", dpi)).mkdirs();
+		File fout = new File(String.format("decrypted/%s/CONV-%s-%d.txt", dpi, dpi, index));
+		FileOutputStream fos = new FileOutputStream(fout);
+	 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+	 
+		bw.write(decipheredText);
+		//bw.newLine();
+	 
+		bw.close();
+	}
+	
+	public void decipherFileByDpi(String dpi, Integer convIndex) {
+		File file;
+		
+		try {
+			file = new File(String.format("crypted/%s/crypted-CONV-%s-%d.txt", dpi, dpi, convIndex));
+			String cipheredText = readConvFile(file);
+			
+			String originalText = trans.decipher(dpi, cipheredText);
+			writeDecipheredFile(dpi, originalText, convIndex);
+			
+			System.out.println();
+            System.out.println("Conversacion descifrada exitosamente");
 		} catch (IOException e) {
 			// Handle file write
 			e.printStackTrace();

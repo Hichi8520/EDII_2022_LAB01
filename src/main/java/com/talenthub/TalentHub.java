@@ -10,6 +10,7 @@ import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.files.FileManager;
 import main.java.com.talenthub.components.huffman.Huffman;
 import main.java.com.talenthub.components.lzw.LZW;
+import main.java.com.talenthub.components.trans.Trans;
 
 public class TalentHub {
 	
@@ -23,24 +24,19 @@ public class TalentHub {
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		/*LZW lzw = new LZW();
-		String textToCompress = "Praesentium praesentium quaerat error omnis ducimus eligendi maxime. Voluptates explicabo ab suscipit quam vero eum aspernatur ab. Molestiae omnis eos ut perspiciatis voluptas veritatis illo. A dolore consequatur non. Quis totam necessitatibus molestias ea.\r\n"
-				+ "In molestiae est ipsa fugit perspiciatis qui. Minus quam reiciendis voluptate qui aspernatur molestiae nihil ratione vero. Autem eum omnis recusandae aut recusandae. Recusandae dolorem inventore eum culpa. Natus rerum laborum autem minus.\r\n"
-				+ "Vitae suscipit animi quis totam molestiae qui. Ut amet delectus quia et maxime dolor voluptas. Aut similique nostrum quasi consectetur sint doloribus non aliquid. Et cupiditate ab quasi porro.\r\n"
-				+ "Non qui repellendus. In accusamus quia possimus doloribus. Repellendus quae aperiam dicta doloremque. Sequi autem et eveniet sit. Doloribus dolorem corporis rerum aut accusantium ab repellat at.\r\n"
-				+ "Eius quasi ipsam animi repudiandae sunt repellendus saepe non harum. Debitis molestiae est sint omnis tempore doloremque vel. Et culpa enim. Sit ducimus voluptas.";
-		System.out.println(textToCompress);
-		List<Integer> compressed = lzw.compress(textToCompress);
-		System.out.println();
-        System.out.println(compressed.toString());
-        String decompressed = lzw.decompress(compressed);
-        System.out.println();
-        System.out.println(decompressed);
-        
-        System.out.println();
-        System.out.println(textToCompress.length());
-        System.out.println(compressed.size());
-        */
+		/*
+		String message = "Sed corrupti dignissimos officia maiores vel ab. Accusamus quisquam ea. Atque aspernatur nihil nostrum nesciunt est et. Unde reprehenderit quia optio qui. Facere dolorum aut molestiae. Ab quis ea ipsa sed ut.";
+		
+		int[] p = {5, 2, 0, 4, 1, 3};
+		
+		Trans cipher = new Trans(p);
+		
+		byte[] c;
+		
+		System.out.println(new String(c = cipher.encrypt(message.getBytes())));
+		
+		System.out.println(new String(cipher.decrypt(c)));
+		*/
 		
 		titleMessage();
 		cargarJsonEmpresas();
@@ -223,11 +219,7 @@ public class TalentHub {
 					case "2": // Decoding
 						String decodedDpi = decodeSelectedCompany(companyIndex, found);
 						if(decodedDpi != null) {
-							// TODO comprimir todas las cartas del usuario encontrado
-							// y mostrar un menú para ver que carta quiere 
-							// descomprimir el usuario
-							fm.compressFilesByDpi(decodedDpi);
-							descomprimirCarta(decodedDpi, fm.getCompressedCount());
+							compressCipher(decodedDpi);
 						}
 						break;
 				}
@@ -236,6 +228,41 @@ public class TalentHub {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void compressCipher(String decodedDpi) {
+		String option = "";
+        
+        while (!option.equalsIgnoreCase("x")) {
+        	System.out.println();
+        	System.out.println("Ingresa la funcion a realizar:");
+        	System.out.println("(1) Compresion / Descompresion");
+			System.out.println("(2) Cifrado / Descifrado");
+        	System.out.println("(x) Salir"); 
+        	
+            // Reading data using readLine
+    		try {
+    			option = reader.readLine();
+    			
+    			if(isNumeric(option) && Integer.valueOf(option) > 0 && Integer.valueOf(option) <= 2) {
+    				if(option.equals("1")) {
+    					fm.compressFilesByDpi(decodedDpi);
+						descomprimirCarta(decodedDpi, fm.getCompressedCount());
+    				} else {
+    					fm.cipherFilesByDpi(decodedDpi);
+    					descifrarConv(decodedDpi, fm.getCipheredCount());
+    				}
+    			} else if (option.equalsIgnoreCase("x")) {
+    				System.out.println();
+					System.out.println("Saliendo a menu principal...");
+    			} else {
+    				System.out.println();
+					System.out.println("** Opcion invalida **");
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
 	}
 	
 	private static void descomprimirCarta(String dpi, Integer cantCartas) {
@@ -263,6 +290,34 @@ public class TalentHub {
 		} else {
 			System.out.println();
 			System.out.println("** El usuario no tiene cartas disponibles");
+		}
+	}
+	
+	private static void descifrarConv(String dpi, Integer cantConv) {
+		if(cantConv > 0) {
+			try {
+				System.out.println();
+				System.out.println("Conversaciones disponibles para este usuario: " + cantConv);
+				System.out.println();
+				System.out.print("Ingresa la conversacion que quieres descifrar: ");
+				String numConv = reader.readLine();
+				
+				if(isNumeric(numConv) && Integer.valueOf(numConv) > 0 && Integer.valueOf(numConv) <= cantConv) {
+					
+					fm.decipherFileByDpi(dpi, Integer.valueOf(numConv));
+					
+				} else {
+					System.out.println();
+					System.out.println("** Opcion invalida");
+				}
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			System.out.println();
+			System.out.println("** El usuario no tiene conversaciones disponibles");
 		}
 	}
 	
