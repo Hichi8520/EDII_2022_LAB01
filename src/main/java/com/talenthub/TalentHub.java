@@ -9,6 +9,7 @@ import main.java.com.talenthub.components.dictionary.Diccionario;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.files.FileManager;
 import main.java.com.talenthub.components.huffman.Huffman;
+import main.java.com.talenthub.components.rsa.RSA;
 import main.java.com.talenthub.components.trans.Trans;
 
 public class TalentHub {
@@ -23,10 +24,17 @@ public class TalentHub {
 		fm = new FileManager();
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
+		RSA rsa = new RSA();
+		String encrypted = rsa.encrypt("Hola mundo");
+		System.out.println(encrypted);
+		System.out.println(rsa.decrypt(encrypted));
+		
+		/*
 		titleMessage();
 		cargarJsonEmpresas();
 		cargarCsv();
 		mainMenu();
+		*/
 	}
 	
 	private static void cargarJsonEmpresas() {
