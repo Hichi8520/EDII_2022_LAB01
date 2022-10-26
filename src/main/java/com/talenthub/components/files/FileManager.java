@@ -122,7 +122,7 @@ public class FileManager {
 		BufferedReader reader;
         StringBuilder sb = new StringBuilder();
         try {
-        	File jsonFile = new File("files/recluiter.json");
+        	File jsonFile = new File("files/recluiters.json");
             reader = new BufferedReader(new FileReader(jsonFile));
             String line = reader.readLine();
             while(line != null) {

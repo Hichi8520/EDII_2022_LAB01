@@ -199,7 +199,7 @@ public class TalentHub {
 			}
 	        
 			System.out.println();
-			System.out.println("Ingresa un mensaje a enviar como COMPAÑIA:");
+			System.out.println("Ingresa un mensaje a enviar como EMPRESA:");
 			mensajeOriginal = "";
 			mensajeCifrado = "";
 			mensajeDescifrado = "";
