@@ -3,14 +3,19 @@ package main.java.com.talenthub;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import main.java.com.talenthub.components.dictionary.Diccionario;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.files.FileManager;
 import main.java.com.talenthub.components.huffman.Huffman;
-import main.java.com.talenthub.components.rsa.RSA;
-import main.java.com.talenthub.components.trans.Trans;
+import main.java.com.talenthub.components.rsa.RSA2;
 
 public class TalentHub {
 	
@@ -18,28 +23,32 @@ public class TalentHub {
 	private static FileManager fm;
 	private static BufferedReader reader;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, Exception {
 		
 		dic = new Diccionario();
 		fm = new FileManager();
-		reader = new BufferedReader(new InputStreamReader(System.in));
+		reader = new BufferedReader(new InputStreamReader(System.in));	
 		
-		RSA rsa = new RSA();
-		String encrypted = rsa.encrypt("Hola mundo");
-		System.out.println(encrypted);
-		System.out.println(rsa.decrypt(encrypted));
-		
-		/*
 		titleMessage();
 		cargarJsonEmpresas();
+		cargarJsonReclutadores();
+		generarLlavesRSA();
 		cargarCsv();
 		mainMenu();
-		*/
 	}
 	
 	private static void cargarJsonEmpresas() {
 		// Select .json file
         fm.loadJsonEmpresas();
+	}
+	
+	private static void cargarJsonReclutadores() {
+		// Select .json file
+        fm.loadJsonReclutadores();
+	}
+	
+	private static void generarLlavesRSA() throws Exception {
+		fm.generateRecluiterCompanyKeys();
 	}
 	
 	private static void cargarCsv() {
@@ -97,6 +106,7 @@ public class TalentHub {
         	System.out.println("Ingresa la funcion a realizar:");
         	System.out.println("(1) Codificacion");
 			System.out.println("(2) Decodificacion");
+			System.out.println("(3) Validar identidad");
         	System.out.println("(x) Salir"); 
         	
             // Reading data using readLine
@@ -105,6 +115,9 @@ public class TalentHub {
     			
     			if(isNumeric(option) && Integer.valueOf(option) > 0 && Integer.valueOf(option) <= 2) {
     				buscarPersona(selectedCompanyIndex, option);
+    			} else if (option.equalsIgnoreCase("3")) {
+    				String empresa = fm.getCompanies().get(selectedCompanyIndex);
+    				menuValidarIdentidad(empresa);
     			} else if (option.equalsIgnoreCase("x")) {
     				System.out.println();
 					System.out.println("Saliendo a menu principal...");
@@ -116,6 +129,126 @@ public class TalentHub {
     			e.printStackTrace();
     		}
         }
+	}
+	
+	private static void menuValidarIdentidad(String company) {
+		String option = "";
+        
+        System.out.println();
+    	System.out.println("--- LISTADO DE RECLUTADORES ---");
+    	for(int i=0; i < fm.getRecluiters().size(); i++) {
+    		System.out.println(String.format("(%d) %s", i+1, fm.getRecluiters().get(i)));
+    	}
+        
+        while (!option.equalsIgnoreCase("x")) {
+        	
+        	System.out.println();
+        	System.out.println("Ingresa un reclutador del proceso de reclutamiento o (x) para salir:");
+        	
+            // Reading data using readLine
+    		try {
+    			option = reader.readLine();
+    			
+    			if(isNumeric(option) && Integer.valueOf(option) > 0 && Integer.valueOf(option) <= fm.getRecluiters().size()) {
+    				String recluiter = fm.getRecluiters().get(Integer.valueOf(option) - 1);
+    				System.out.println();
+    	        	System.out.println("Reclutador seleccionado: " + recluiter);
+    				validarIdentidad(recluiter, company);
+    			} else if (option.equalsIgnoreCase("x")) {
+    				System.out.println();
+					System.out.println("Programa terminado...");
+    			} else {
+    				System.out.println();
+					System.out.println("** Opcion invalida **");
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+	}
+	
+	private static void validarIdentidad(String reclutador, String empresa) {
+		try {
+			RSA2 rsa = new RSA2();
+	        rsa.openFromDiskPrivateKey(String.format("rsa/%s - %s/private.rsa", reclutador, empresa));    
+	        rsa.openFromDiskPublicKey(String.format("rsa/%s - %s/public.rsa", reclutador, empresa));
+			
+			System.out.println();
+			System.out.println("Ingresa un mensaje a enviar como RECLUTADOR:");
+			String mensajeOriginal, mensajeCifrado, mensajeDescifrado;
+			
+			mensajeOriginal = reader.readLine();
+
+	        mensajeCifrado = rsa.Encrypt(mensajeOriginal);
+	        System.out.println();
+			System.out.println("Mensaje cifrado:");
+			System.out.println(mensajeCifrado);
+			
+			mensajeDescifrado = rsa.Decrypt(mensajeCifrado);
+			
+			System.out.println();
+			System.out.println("Mensaje descifrado:");
+			System.out.println(mensajeDescifrado);
+			
+			if(mensajeOriginal.equals(mensajeDescifrado)) {
+				System.out.println();
+				System.out.println("¡Validacion de identidad exitosa!");
+			} else {
+				System.out.println();
+				System.out.println("** Validación de identidad fallida **");
+			}
+	        
+			System.out.println();
+			System.out.println("Ingresa un mensaje a enviar como COMPAÑIA:");
+			mensajeOriginal = "";
+			mensajeCifrado = "";
+			mensajeDescifrado = "";
+			
+			mensajeOriginal = reader.readLine();
+
+	        mensajeCifrado = rsa.Encrypt(mensajeOriginal);
+	        System.out.println();
+			System.out.println("Mensaje cifrado:");
+			System.out.println(mensajeCifrado);
+			
+			mensajeDescifrado = rsa.Decrypt(mensajeCifrado);
+			
+			System.out.println();
+			System.out.println("Mensaje descifrado:");
+			System.out.println(mensajeDescifrado);
+			
+			if(mensajeOriginal.equals(mensajeDescifrado)) {
+				System.out.println();
+				System.out.println("¡Validacion de identidad exitosa!");
+			} else {
+				System.out.println();
+				System.out.println("** Validación de identidad fallida **");
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static void insertarPersona() {
@@ -134,7 +267,7 @@ public class TalentHub {
 			System.out.print("Direccion: ");
 			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion, null);
+			persona = new Persona(nombre, dpi, fechaNac, direccion, null, null);
 			dic.insertar(persona);
 			
 		} catch (IOException e) {
@@ -154,7 +287,7 @@ public class TalentHub {
 			System.out.print("DPI: ");
 			dpi = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, "", "", null);
+			persona = new Persona(nombre, dpi, "", "", null, null);
 			dic.eliminar(persona);
 			
 		} catch (IOException e) {
@@ -178,7 +311,7 @@ public class TalentHub {
 			System.out.print("Direccion: ");
 			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion, null);
+			persona = new Persona(nombre, dpi, fechaNac, direccion, null, null);
 			dic.actualizar(persona);
 			
 		} catch (IOException e) {

@@ -8,9 +8,14 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -21,13 +26,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import main.java.com.talenthub.components.dictionary.model.Instruction;
 import main.java.com.talenthub.components.dictionary.model.Persona;
 import main.java.com.talenthub.components.lzw.LZW;
+import main.java.com.talenthub.components.rsa.RSA2;
 import main.java.com.talenthub.components.trans.Trans;
 
 public class FileManager {
 
 	private List<String> companies;
+	private List<String> recluiters;
 	private List<Instruction> instructions;
 	private LZW lzw;
+	private RSA2 rsa;
 	private Trans trans;
 	private Integer compressedCount;
 	private Integer cipheredCount;
@@ -35,8 +43,10 @@ public class FileManager {
 	public FileManager() {
 		super();
 		companies = new ArrayList<>();
+		recluiters = new ArrayList<>();
 		instructions = new ArrayList<>();
 		lzw = new LZW();
+		rsa = new RSA2();
 		trans = new Trans();
 		compressedCount = 0;
 		cipheredCount = 0;
@@ -44,6 +54,10 @@ public class FileManager {
 	
 	public List<String> getCompanies() {
 		return companies;
+	}
+
+	public List<String> getRecluiters() {
+		return recluiters;
 	}
 
 	public List<Instruction> getInstructions() {
@@ -99,6 +113,66 @@ public class FileManager {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * JSON Reclutadores
+	 */
+	public boolean loadJsonReclutadores() {
+		BufferedReader reader;
+        StringBuilder sb = new StringBuilder();
+        try {
+        	File jsonFile = new File("files/recluiter.json");
+            reader = new BufferedReader(new FileReader(jsonFile));
+            String line = reader.readLine();
+            while(line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                storeRecluitersLine(line);
+                line = reader.readLine();
+            }
+            //text.setText(sb.toString());
+            System.out.println();
+            System.out.println(recluiters.size() + " reclutadores leidos");
+            reader.close();
+        } 
+        catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        if(recluiters.isEmpty()) return false;
+        else return true;
+	}
+	
+	private void storeRecluitersLine(String line) {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			recluiters = objectMapper.readValue(line, List.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * RSA generate keys
+	 */
+	public boolean generateRecluiterCompanyKeys() throws Exception {
+		for (String reclutador : recluiters) {
+			for (String empresa : companies) {
+				
+				new File(String.format("rsa/%s - %s", reclutador, empresa)).mkdirs();
+				rsa.genKeyPair(512);
+		        
+		        rsa.saveToDiskPrivateKey(String.format("rsa/%s - %s/private.rsa", reclutador, empresa));
+		        rsa.saveToDiskPublicKey(String.format("rsa/%s - %s/public.rsa", reclutador, empresa));
+			}
+		}
+		return true;
 	}
 
 	/*

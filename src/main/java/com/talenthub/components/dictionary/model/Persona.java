@@ -28,9 +28,12 @@ public class Persona implements Comparable{
 	@JsonProperty("companies")
 	private List<String> empresas;
 	
+	@JsonProperty("recluiter")
+	private String reclutador;
+	
 	private Map<String, String> mapaEmpresaDpi;
 	
-	public Persona(String nombre, String dpi, String fechaNac, String direccion, List<String> empresas) {
+	public Persona(String nombre, String dpi, String fechaNac, String direccion, List<String> empresas, String reclutador) {
 		super();
 		this.nombre = nombre;
 		this.dpi = dpi;
@@ -38,6 +41,7 @@ public class Persona implements Comparable{
 		this.direccion = direccion;
 		this.empresas = empresas;
 		this.mapaEmpresaDpi = new HashMap<String, String>();
+		this.reclutador = reclutador;
 	}
 	
 	public Persona() {
@@ -82,6 +86,14 @@ public class Persona implements Comparable{
 
 	public void setMapaEmpresaDpi(Map<String, String> mapaEmpresaDpi) {
 		this.mapaEmpresaDpi = mapaEmpresaDpi;
+	}
+
+	public String getReclutador() {
+		return reclutador;
+	}
+
+	public void setReclutador(String reclutador) {
+		this.reclutador = reclutador;
 	}
 
 	@Override

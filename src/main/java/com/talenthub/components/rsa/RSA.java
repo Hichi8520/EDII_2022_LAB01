@@ -49,6 +49,7 @@ public class RSA {
 		
 		List<BigInteger> bigintList = new ArrayList<BigInteger>();
 		for (char c : textToDecrypt.toCharArray()) {
+			byte bt = (byte) c;
 			bigintList.add(BigInteger.valueOf((byte) c));
 		}
 		
@@ -63,10 +64,10 @@ public class RSA {
 	    //double c;
 
 	    // 1st prime number p
-	    p = 17;
+	    p = 11;
 
 	    // 2nd prime number q
-	    q = 19;
+	    q = 13;
 	    n = p * q;
 	    z = (p - 1) * (q - 1);
 	    System.out.println("the value of z = " + z);
@@ -118,6 +119,7 @@ public class RSA {
 		String result = "";
 		
 		for (Double d : encryptedList) {
+			byte bt = (byte)(double)d;
 			result += (char) d.byteValue();
 		}
 		return result;
@@ -137,7 +139,7 @@ public class RSA {
 		int p, q, n, z, d = 0, e, i;
 		 
 	    // The number to be encrypted and decrypted
-	    int msg = 256;
+	    int msg = 100;
 	    double c;
 	    BigInteger msgback;
 
