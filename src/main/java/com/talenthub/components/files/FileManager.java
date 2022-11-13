@@ -174,6 +174,15 @@ public class FileManager {
 		}
 		return true;
 	}
+	
+	public boolean generateRecluiterCompanyKeys(String reclutador, String empresa) throws Exception {
+		new File(String.format("rsa/%s - %s", reclutador, empresa)).mkdirs();
+		rsa.genKeyPair(512);
+        
+        rsa.saveToDiskPrivateKey(String.format("rsa/%s - %s/private.rsa", reclutador, empresa));
+        rsa.saveToDiskPublicKey(String.format("rsa/%s - %s/public.rsa", reclutador, empresa));
+		return true;
+	}
 
 	/*
 	 * Select input file
@@ -369,6 +378,11 @@ public class FileManager {
 			
 			System.out.println();
             System.out.println("Carta descomprimida exitosamente");
+            System.out.println("Presiona Enter para visualizar");
+            System.in.read();
+            
+            System.out.println();
+            System.out.println(originalText);
 		} catch (IOException e) {
 			// Handle file write
 			e.printStackTrace();
@@ -468,6 +482,11 @@ public class FileManager {
 			
 			System.out.println();
             System.out.println("Conversacion descifrada exitosamente");
+            System.out.println("Presiona Enter para visualizar");
+            System.in.read();
+            
+            System.out.println();
+            System.out.println(originalText);
 		} catch (IOException e) {
 			// Handle file write
 			e.printStackTrace();

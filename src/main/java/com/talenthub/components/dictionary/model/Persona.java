@@ -44,6 +44,14 @@ public class Persona implements Comparable{
 		this.reclutador = reclutador;
 	}
 	
+	public Persona(String nombre, String dpi, String reclutador) {
+		super();
+		this.nombre = nombre;
+		this.dpi = dpi;
+		this.reclutador = reclutador;
+		this.mapaEmpresaDpi = new HashMap<String, String>();
+	}
+	
 	public Persona() {
 		this.mapaEmpresaDpi = new HashMap<String, String>();
 	}
@@ -100,13 +108,13 @@ public class Persona implements Comparable{
 	public int compareTo(Object o) {
 		if (o instanceof Persona) {
 			
-			if ( this.getNombre().compareTo(((Persona)o).getNombre()) == 0 ) { // nombres iguales
+			if ( this.getNombre().toLowerCase().compareTo(((Persona)o).getNombre().toLowerCase()) == 0 ) { // nombres iguales
 				
 				return this.getDpi().compareTo(((Persona)o).getDpi());
 				
 			} else {
 				
-				return this.getNombre().compareTo(((Persona)o).getNombre());
+				return this.getNombre().toLowerCase().compareTo(((Persona)o).getNombre().toLowerCase());
 			}
 			
 		} else return -10;
@@ -128,7 +136,13 @@ public class Persona implements Comparable{
 				+ "\"datebirth\":\"" + fechaNac + "\", \"address\":\"" + direccion + "\"}";*/
 	}
 	
+	public String toSimpleString() {
+		return nombre + " | " + dpi + " | " + reclutador + " | " + fechaNac + " | " + direccion;
+	}
+	
 	public void encodeCompanies() {
+		this.mapaEmpresaDpi = new HashMap<String, String>();
+		
 		Huffman huff = new Huffman();
 		if(this.empresas != null && !this.empresas.isEmpty()) {
 			for(String empresa: this.empresas) {

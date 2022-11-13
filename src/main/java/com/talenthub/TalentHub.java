@@ -7,6 +7,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -22,6 +24,7 @@ public class TalentHub {
 	private static Diccionario dic;
 	private static FileManager fm;
 	private static BufferedReader reader;
+	private static String recluiterName;
 
 	public static void main(String[] args) throws IOException, Exception {
 		
@@ -32,9 +35,10 @@ public class TalentHub {
 		titleMessage();
 		cargarJsonEmpresas();
 		cargarJsonReclutadores();
-		generarLlavesRSA();
+		//generarLlavesRSA();
 		cargarCsv();
-		mainMenu();
+		//mainMenu();
+		startTalentHub();
 	}
 	
 	private static void cargarJsonEmpresas() {
@@ -57,6 +61,130 @@ public class TalentHub {
         	// Store the companies
             dic.insertarInstrucciones(fm.getInstructions());
         }
+	}
+	
+	private static void startTalentHub() {
+        String option = "";
+        
+        while (!option.equalsIgnoreCase("x")) {
+        	
+        	recluiterName = "";
+        	System.out.println();
+        	System.out.println("Bienvenido/a a TalentHub, ingresa una opcion:");
+        	System.out.println("(1) Login");
+        	System.out.println("(x) Salir");
+        	
+            // Reading data using readLine
+    		try {
+    			option = reader.readLine();
+    			
+    			if(isNumeric(option) && Integer.valueOf(option) == 1) {
+    				System.out.println();
+    	        	System.out.print("Nombre del reclutador: ");
+    	        	
+    	        	recluiterName = reader.readLine();
+    				mainMenuTalentHub();
+    			} else if (option.equalsIgnoreCase("x")) {
+    				System.out.println();
+					System.out.println("Programa terminado...");
+    			} else {
+    				System.out.println();
+					System.out.println("** Opcion invalida **");
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+	}
+	
+	private static void mainMenuTalentHub() {
+		String option = "";
+        
+        while (!option.equalsIgnoreCase("x")) {
+        	System.out.println();
+        	System.out.println("Hola " + recluiterName + ", ingresa la funcion a realizar:");
+        	System.out.println("(1) Listado de candidatos");
+        	System.out.println("(2) Ingresar nuevo candidato");
+			System.out.println("(3) Abrir conversacion");
+			System.out.println("(4) Actualizar registro de candidato");
+			System.out.println("(5) Iniciar proceso de reclutamiento");
+        	System.out.println("(x) Salir"); 
+        	
+            // Reading data using readLine
+    		try {
+    			option = reader.readLine();
+    			
+    			if(option.equalsIgnoreCase("1")) {
+    				dic.listarPersonas();
+    			} else if (option.equalsIgnoreCase("2")) {
+    				insertarPersona();
+    			} else if (option.equalsIgnoreCase("3")) {
+    				buscarPersonaTalentHub();
+    			} else if (option.equalsIgnoreCase("4")) {
+    				actualizarPersona();
+    			} else if (option.equalsIgnoreCase("5")) {
+    				procesoReclutamiento();
+    			} else if (option.equalsIgnoreCase("x")) {
+    				System.out.println();
+					System.out.println("Cerrando sesion...");
+    			} else {
+    				System.out.println();
+					System.out.println("** Opcion invalida **");
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+	}
+	
+	private static void procesoReclutamiento() {
+		try {
+			System.out.println();
+			System.out.println("Ingresa el dpi del candidato");
+			String dpi;
+			
+			System.out.print("DPI: ");
+			dpi = reader.readLine();
+			
+			Persona found = dic.buscar(dpi);
+			if (found == null) {
+				System.out.println();
+				System.out.println(String.format("** El candidato con dpi %s no fue encontrado **", dpi));
+			} else {
+				System.out.println();
+				System.out.println(String.format("Candidato seleccionado: %s", found.getNombre()));
+				
+				String option = "";
+		        
+		        System.out.println();
+		    	System.out.println("--- LISTADO DE EMPRESAS INGRESADAS ---");
+		    	for(int i=0; i < fm.getCompanies().size(); i++) {
+		    		System.out.println(String.format("(%d) %s", i+1, fm.getCompanies().get(i)));
+		    	}
+		        
+		    	System.out.println();
+	        	System.out.println("Ingresa una empresa del proceso de reclutamiento o (x) para salir:");
+	        	
+	            // Reading data using readLine
+	        	option = reader.readLine();
+				
+				if(isNumeric(option) && Integer.valueOf(option) > 0 && Integer.valueOf(option) <= fm.getCompanies().size()) {
+					String selectedCompany = fm.getCompanies().get(Integer.valueOf(option) - 1);
+					System.out.println();
+		        	System.out.println(String.format("Se iniciara un proceso de reclutamiento para %s en %s", found.getNombre(), selectedCompany));
+					actualizarCandidatoConEmpresa(found, selectedCompany);
+				} else if (option.equalsIgnoreCase("x")) {
+					System.out.println();
+					System.out.println("Programa terminado...");
+				} else {
+					System.out.println();
+					System.out.println("** Opcion invalida **");
+				}
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void mainMenu() {
@@ -153,7 +281,7 @@ public class TalentHub {
     				String recluiter = fm.getRecluiters().get(Integer.valueOf(option) - 1);
     				System.out.println();
     	        	System.out.println("Reclutador seleccionado: " + recluiter);
-    				validarIdentidad(recluiter, company);
+    				validarIdentidad(recluiter, company, null);
     			} else if (option.equalsIgnoreCase("x")) {
     				System.out.println();
 					System.out.println("Programa terminado...");
@@ -167,8 +295,10 @@ public class TalentHub {
         }
 	}
 	
-	private static void validarIdentidad(String reclutador, String empresa) {
+	private static void validarIdentidad(String reclutador, String empresa, Persona persona) {
 		try {
+			fm.generateRecluiterCompanyKeys(reclutador, empresa);
+			
 			RSA2 rsa = new RSA2();
 	        rsa.openFromDiskPrivateKey(String.format("rsa/%s - %s/private.rsa", reclutador, empresa));    
 	        rsa.openFromDiskPublicKey(String.format("rsa/%s - %s/public.rsa", reclutador, empresa));
@@ -193,12 +323,17 @@ public class TalentHub {
 			if(mensajeOriginal.equals(mensajeDescifrado)) {
 				System.out.println();
 				System.out.println("¡Validacion de identidad exitosa!");
+				System.out.println();
+				System.out.println(String.format("Se compartira con la empresa %s la informacion de:", empresa));
+				System.out.println();
+				System.out.println("NOMBRE | DPI | RECLUTADOR | FECHA NAC | DIRECCION");
+				System.out.println(persona.toSimpleString());
 			} else {
 				System.out.println();
 				System.out.println("** Validación de identidad fallida **");
 			}
 	        
-			System.out.println();
+			/*System.out.println();
 			System.out.println("Ingresa un mensaje a enviar como EMPRESA:");
 			mensajeOriginal = "";
 			mensajeCifrado = "";
@@ -224,6 +359,7 @@ public class TalentHub {
 				System.out.println();
 				System.out.println("** Validación de identidad fallida **");
 			}
+			*/
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -248,6 +384,9 @@ public class TalentHub {
 		} catch (NoSuchProviderException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -262,13 +401,9 @@ public class TalentHub {
 			nombre = reader.readLine();
 			System.out.print("DPI: ");
 			dpi = reader.readLine();
-			System.out.print("Fecha de nacimiento: ");
-			fechaNac = reader.readLine();
-			System.out.print("Direccion: ");
-			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion, null, null);
-			dic.insertar(persona);
+			persona = new Persona(nombre, dpi, recluiterName);
+			dic.insertar(persona, true);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -288,7 +423,7 @@ public class TalentHub {
 			dpi = reader.readLine();
 			
 			persona = new Persona(nombre, dpi, "", "", null, null);
-			dic.eliminar(persona);
+			dic.eliminar(persona, true);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -298,21 +433,108 @@ public class TalentHub {
 	private static void actualizarPersona() {
 		try {
 			System.out.println();
-			System.out.println("Ingresa los siguiente campos");
+			System.out.println("Ingresa el dpi del candidato");
 			String nombre, dpi, fechaNac, direccion;
 			Persona persona;
 			
-			System.out.print("Nombre: ");
-			nombre = reader.readLine();
 			System.out.print("DPI: ");
 			dpi = reader.readLine();
-			System.out.print("Fecha de nacimiento: ");
-			fechaNac = reader.readLine();
-			System.out.print("Direccion: ");
-			direccion = reader.readLine();
 			
-			persona = new Persona(nombre, dpi, fechaNac, direccion, null, null);
-			dic.actualizar(persona);
+			Persona found = dic.buscar(dpi);
+			if (found == null) {
+				System.out.println();
+				System.out.println(String.format("** El candidato con dpi %s no fue encontrado **", dpi));
+			} else {
+				System.out.println();
+				System.out.println(String.format("Actualizar los siguientes datos de %s:", found.getNombre()));
+				System.out.println();
+				System.out.print("Fecha de nacimiento: ");
+				fechaNac = reader.readLine();
+				System.out.print("Direccion: ");
+				direccion = reader.readLine();
+				
+				persona = new Persona(found.getNombre(), dpi, fechaNac, direccion, found.getEmpresas(), found.getReclutador());
+				dic.actualizar(persona, true);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void actualizarCandidatoConEmpresa(Persona persona, String company) {
+		List<String> empresas = persona.getEmpresas();
+		empresas.add(company);
+		persona.setEmpresas(empresas);
+		persona.encodeCompanies();
+		//persona.setReclutador(recluiterName);
+		
+		dic.actualizar(persona, true);
+		
+		reviewCandidato(persona, company);
+	}
+	
+	private static void reviewCandidato(Persona persona, String company) {
+		String option = "";
+        
+		System.out.println();
+    	System.out.println("Es un candidato ideal?");
+    	System.out.println("(1) Si");
+		System.out.println("(2) No");
+    	
+        // Reading data using readLine
+		try {
+			option = reader.readLine();
+			
+			if (option.equalsIgnoreCase("1")) {
+				validarIdentidad(recluiterName, company, persona);
+			} else if (option.equalsIgnoreCase("2")) {
+				dic.eliminar(persona, true);
+			} else {
+				System.out.println();
+				System.out.println("** Opcion invalida **");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void buscarPersonaTalentHub() {
+		try {
+			System.out.println();
+			System.out.print("Ingresa el dpi del candidato a buscar: ");
+			String dpi = reader.readLine();
+			
+			Persona found = dic.buscar(dpi);
+			
+			if (found == null) {
+				System.out.println();
+				System.out.println(String.format("** El dpi %s no fue encontrado **", dpi));
+			} else {
+				//fm.writeFile(dpi, found);
+    	        
+				//System.out.println();
+				//System.out.println("Archivo de salida generado con exito");
+				System.out.println();
+				System.out.println("Candidato encontrado:");
+				System.out.println();
+				System.out.println("NOMBRE | DPI | RECLUTADOR | FECHA NAC | DIRECCION");
+				System.out.println(found.toSimpleString());
+				
+				fm.cipherFilesByDpi(found.getDpi());
+				descifrarConv(found.getDpi(), fm.getCipheredCount());
+				
+				System.out.println();
+				System.out.println("Presiona Enter para continuar");
+				System.in.read();
+				
+				fm.compressFilesByDpi(found.getDpi());
+				descomprimirCarta(found.getDpi(), fm.getCompressedCount());
+				
+				System.out.println();
+				System.out.println("Presiona Enter para continuar");
+				System.in.read();
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();

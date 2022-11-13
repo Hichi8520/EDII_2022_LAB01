@@ -1,5 +1,7 @@
 package main.java.com.talenthub.components.dictionary;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +17,36 @@ public class Diccionario {
 		this.mapaExterno = new HashMap<>();
 	}
 	
-	public void insertar(Persona persona) {
+	public void insertar(Persona persona, boolean printMessage) {
 		// Insert only if it isn't already in the map
 		if (!mapaExterno.containsKey(persona.getDpi())) {
 			mapaExterno.put(persona.getDpi(), persona);
+			if (printMessage) {
+				System.out.println();
+				System.out.println("Candidato ingresado exitosamente");
+			}
+		} else {
+			if (printMessage) {
+				System.out.println();
+				System.out.println("** Este candidato ya existe en el sistema");
+			}
 		}
 	}
 	
-	public void eliminar(Persona persona) {
+	public void eliminar(Persona persona, boolean printMessage) {
 		mapaExterno.remove(persona.getDpi());
+		if (printMessage) {
+			System.out.println();
+			System.out.println("Candidato eliminado exitosamente");
+		}
 	}
 	
-	public void actualizar(Persona persona) {
+	public void actualizar(Persona persona, boolean printMessage) {
 		mapaExterno.replace(persona.getDpi(), persona);
+		if (printMessage) {
+			System.out.println();
+			System.out.println("Candidato actualizado exitosamente");
+		}
 	}
 	
 	public Persona buscar(String dpi) {
@@ -40,13 +59,13 @@ public class Diccionario {
 				
 				switch (instruction.getAction()) {
 					case "INSERT":
-						insertar(instruction.getPersona());
+						insertar(instruction.getPersona(), false);
 						break;
 					case "DELETE":
-						eliminar(instruction.getPersona());
+						eliminar(instruction.getPersona(), false);
 						break;
 					case "PATCH":
-						actualizar(instruction.getPersona());
+						actualizar(instruction.getPersona(), false);
 						break;
 				}
 			}
@@ -57,5 +76,16 @@ public class Diccionario {
 			System.out.println();
 			System.out.println("** No hay instrucciones para procesar **");
 		}
+	}
+	
+	public void listarPersonas() {
+		List<Persona> employeeById = new ArrayList<>(mapaExterno.values());
+		Collections.sort(employeeById);
+		
+		System.out.println();
+		System.out.println("NOMBRE | DPI | RECLUTADOR | FECHA NAC | DIRECCION");
+		for (Persona item : employeeById) {
+	        System.out.println(item.toSimpleString());
+	    }
 	}
 }
